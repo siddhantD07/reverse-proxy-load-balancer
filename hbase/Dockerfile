@@ -12,7 +12,6 @@
 #
 
 FROM alpine:latest
-MAINTAINER Hari Sekhon (https://www.linkedin.com/in/harisekhon)
 
 ARG HBASE_VERSION=1.4.13
 
