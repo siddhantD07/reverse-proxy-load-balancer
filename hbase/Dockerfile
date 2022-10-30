@@ -13,9 +13,9 @@
 
 FROM alpine:latest
 
-ARG HBASE_VERSION=1.4.13
-
 ENV PATH $PATH:/hbase/bin
+
+ARG HBASE_VERSION=2.4.15
 
 ENV JAVA_HOME=/usr
 
@@ -26,7 +26,7 @@ WORKDIR /
 
 RUN \
     apk add --no-cache bash openjdk8-jre-base wget tar openssh && \
-    url="https://apache.mirror.digionline.de/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz"; \
+    url="https://dlcdn.apache.org/hbase/2.4.15/hbase-2.4.15-bin.tar.gz"; \
     wget -t 100 --retry-connrefused -O "hbase-$HBASE_VERSION-bin.tar.gz" "$url" && \
     mkdir hbase-$HBASE_VERSION && \
     tar zxf hbase-$HBASE_VERSION-bin.tar.gz -C hbase-$HBASE_VERSION --strip 1 && \
