@@ -14,7 +14,7 @@ Systems Engineering 2 - Assignment 1
 Organization
 ------------
 
-* **Hard deadline: 2.12.2022 at noon CEST**
+* **Hard deadline: 2.12.2022 at noon in Dresden**
 * You have to fork this repository and adapt the code in your forked repository.
 * Your solution will be tested at least three times per week in the time before the deadline.
 * If your solution fails one or multiple tests, you will *not* receive a detailed explanation of the reasons why it failed.
