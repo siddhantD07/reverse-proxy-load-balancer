@@ -188,7 +188,7 @@ It only receives requests from grproxy after it subscribed to ZooKeeper, and aut
    * ``gserve/src/gserve/HbaseJSON.go`` contains helpers to convert data from frontend JSON via Go types to base64-encoded HBase JSON and back
    * You might want to use the (Un)marshal functions from the `encoding/JSON package <https://golang.org/pkg/encoding/json/>`_
    * Use the **scanner** to ensure that you get all versions when a certain key was updated.
-   * You are allowed to use the `go-zookeeper <https://github.com/samuel/go-zookeeper>`_ library
+   * You are allowed to use this `go-zookeeper <https://github.com/samuel/go-zookeeper>`_  or this `go-zookeeper <github.com/go-zookeeper/zk>`_ library
 
 
 Hints
@@ -197,6 +197,7 @@ Hints
 * Start small, don't try to solve every problem at once.
 * Test your components against single Docker containers (e.g., gserve with HBase container), and integrate them into docker-compose later on.
 * The developer tools of your browser may help you to capture and analyse requests and responses.
+* The internet is your friend.
 
 
 Git
@@ -275,9 +276,7 @@ Frequently Asked Questions
 
    Unfortunately, HBase does not maintain a stable URL to the latest version of the software and we have to periodically migrate to newer versions.
 
-   Try changing the variable HBASE_VERSION in hbase/Dockerfile to a more recent version. You can find a list of available versions here: http://apache.lauf-forum.at/hbase/stable/
-
-   Also, see this discussion on Auditorium: https://auditorium.inf.tu-dresden.de/en/questions/4075
+   Try changing the variable HBASE_VERSION and url in hbase/Dockerfile to a more recent version. You can find a list of available versions here: http://apache.lauf-forum.at/hbase/stable/
 
 
 Optional
@@ -289,8 +288,10 @@ Select a topic you're interested in, and enhance any of the components.
 For instance, query single documents or rows, replace nginx with a web server written by yourself, improve the error handling in Grproxy, write test cases or in the worst case just beautify the HTML/CSS.
 But keep in mind: your application *has to conform to the task description*.
 
-Hint
+Hints
 ----
 
 * To fulfill this assignment you need to at least adapt one docker-compose file, four Dockerfiles, and two Go files.
 * The system always tries to execute *docker-compose up*, ensure that this always succeeds.
+* Run "docker-compose up --force-recreate --build" in your repository before uploading to test!
+* Docker compose and VPN often don't work well together. Disconnect any VPN connections first.

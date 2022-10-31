@@ -1,21 +1,10 @@
-#
 #  Author: Hari Sekhon
-#  Date: 2016-04-24 21:18:57 +0100 (Sun, 24 Apr 2016)
-#
-#  vim:ts=4:sts=4:sw=4:et
-#
-#  https://github.com/harisekhon/Dockerfiles/hbase
-#
-#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
-#
-#  https://www.linkedin.com/in/harisekhon
-#
 
 FROM alpine:latest
 
 ENV PATH $PATH:/hbase/bin
 
-ARG HBASE_VERSION=2.4.15
+ARG HBASE_VERSION=1.4.11
 
 ENV JAVA_HOME=/usr
 
@@ -26,8 +15,7 @@ WORKDIR /
 
 RUN \
     apk add --no-cache bash openjdk8-jre-base wget tar openssh && \
-    url="https://dlcdn.apache.org/hbase/2.4.15/hbase-2.4.15-bin.tar.gz"; \
-    wget -t 100 --retry-connrefused -O "hbase-$HBASE_VERSION-bin.tar.gz" "$url" && \
+    wget --progress=bar:force:noscroll -t 100 --retry-connrefused -O "hbase-$HBASE_VERSION-bin.tar.gz" "https://archive.apache.org/dist/hbase/hbase-1.4.11/hbase-1.4.11-bin.tar.gz" && \
     mkdir hbase-$HBASE_VERSION && \
     tar zxf hbase-$HBASE_VERSION-bin.tar.gz -C hbase-$HBASE_VERSION --strip 1 && \
     ln -sv hbase-$HBASE_VERSION hbase && \
