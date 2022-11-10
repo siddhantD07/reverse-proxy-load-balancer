@@ -1,9 +1,27 @@
 version: '2'
 services:
-        nginx:
-        grproxy:
-        hbase:
-        gserve1:
-        gserve2:
+    nginx:
+        build: ./nginx
+        ports: 
+            - "80:80"
+        volumes:
+            - ./nginx/www:/var/www/nginx
+        networks:
+            - se_backend
+                
+#         grproxy:
+    hbase:
+        build: ./hbase
+        ports:
+            - "8080:8080"
+        networks:
+            - se_backend
+#         gserve1:
+#         gserve2:
 
 networks:
+    se_backend:
+        driver: bridge
+    se_frontend:
+        driver: bridge
+
