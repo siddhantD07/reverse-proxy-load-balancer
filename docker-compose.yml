@@ -17,25 +17,23 @@ services:
             se_backend:
                 aliases:
                     - zookeeper
-        healthcheck:
-            test: ["CMD", "wget", "http://localhost:8080"]
-            interval: 15s
-            retries: 5
+        # healthcheck:
+        #     test: ["CMD", "wget", "http://localhost:8080"]
+        #     interval: 15s
+        #     retries: 5
     grproxy:
             build: ./grproxy
             networks:
                 - se_frontend
                 - se_backend
             depends_on:
-                hbase:
-                    condition: service_healthy
+                - hbase
     gserve1:
             build: ./gserve
             networks:
                 - se_backend
             depends_on:
-                hbase:
-                    condition: service_healthy
+                - hbase
             environment:
                 - NAME=gserve1
     gserve2:
@@ -43,8 +41,7 @@ services:
             networks:
                 - se_backend
             depends_on:
-                hbase:
-                    condition: service_healthy
+                - hbase
             environment:
                 - NAME=gserve2
 
