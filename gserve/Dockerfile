@@ -2,21 +2,19 @@ FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git
 
-RUN mkdir /gserve
+WORKDIR $GOPATH/src/app/
 
-COPY /src/gserve /gserve
-
-WORKDIR /gserve
+COPY ./src/gserve .
 
 RUN go mod init gserve
 
 RUN go get -d -v
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o gserve ./
+RUN CGO_ENABLED=0 go build -o /go/bin
 
 FROM scratch
 
-COPY --from=builder /gserve .
+COPY --from=builder /go/bin/ .
 
 EXPOSE 80
 

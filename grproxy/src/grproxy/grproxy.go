@@ -11,6 +11,8 @@ func main() {
 
 	time.Sleep(20 * time.Second)
 
+	fmt.Println("Grproxy started...")
+
 	conn, _, err := zk.Connect([]string{"zookeeper"}, time.Second) //*10)
 	if err != nil {
 		panic(err)

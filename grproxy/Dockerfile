@@ -2,21 +2,19 @@ FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git
 
-RUN mkdir /proxy
+WORKDIR $GOPATH/src/app/
 
-COPY /src/grproxy /proxy
+COPY ./src/grproxy .
 
-WORKDIR /proxy
-
-RUN go mod init proxy
+RUN go mod init grproxy
 
 RUN go get -d -v
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o grproxy ./
+RUN CGO_ENABLED=0 go build -o /go/bin
 
 FROM scratch
 
-COPY --from=builder /proxy .
+COPY --from=builder /go/bin/ .
 
 EXPOSE 80
 
