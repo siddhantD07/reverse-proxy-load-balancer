@@ -7,17 +7,46 @@ services:
         volumes:
             - ./nginx/www:/var/www/nginx
         networks:
-            - se_backend
-                
-#         grproxy:
+            - se_backend                
     hbase:
         build: ./hbase
         ports:
             - "8080:8080"
+            - "2181:2181"
         networks:
-            - se_backend
-#         gserve1:
-#         gserve2:
+            se_backend:
+                aliases:
+                    - zookeeper
+        healthcheck:
+            test: ["CMD", "wget", "http://localhost:8080"]
+            interval: 15s
+            retries: 5
+    grproxy:
+            build: ./grproxy
+            networks:
+                - se_frontend
+                - se_backend
+            depends_on:
+                hbase:
+                    condition: service_healthy
+    gserve1:
+            build: ./gserve
+            networks:
+                - se_backend
+            depends_on:
+                hbase:
+                    condition: service_healthy
+            environment:
+                - NAME=gserve1
+    gserve2:
+            build: ./gserve
+            networks:
+                - se_backend
+            depends_on:
+                hbase:
+                    condition: service_healthy
+            environment:
+                - NAME=gserve2
 
 networks:
     se_backend:
