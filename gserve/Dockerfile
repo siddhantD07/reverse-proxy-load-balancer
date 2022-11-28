@@ -6,7 +6,7 @@ WORKDIR $GOPATH/src/app/
 
 COPY ./src/gserve .
 
-RUN go mod init gserve
+# RUN go mod init gserve
 
 RUN go get -d -v
 

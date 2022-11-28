@@ -2,8 +2,8 @@ version: '2'
 services:
     nginx:
         build: ./nginx
-        ports: 
-            - "80:80"
+        # ports: 
+        #     - "80:80"
         volumes:
             - ./nginx/www:/var/www/nginx
         networks:
@@ -28,12 +28,15 @@ services:
                 - se_backend
             depends_on:
                 - hbase
+            ports: 
+                - "80:80"
     gserve1:
             build: ./gserve
             networks:
                 - se_backend
             depends_on:
                 - hbase
+                - grproxy
             environment:
                 - NAME=gserve1
     gserve2:
@@ -42,6 +45,7 @@ services:
                 - se_backend
             depends_on:
                 - hbase
+                - grproxy
             environment:
                 - NAME=gserve2
 

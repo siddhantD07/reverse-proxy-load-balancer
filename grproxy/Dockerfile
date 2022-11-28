@@ -6,7 +6,7 @@ WORKDIR $GOPATH/src/app/
 
 COPY ./src/grproxy .
 
-RUN go mod init grproxy
+# RUN go mod init grproxy
 
 RUN go get -d -v
 
