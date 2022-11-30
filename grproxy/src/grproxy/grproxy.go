@@ -11,11 +11,11 @@ import (
 )
 
 func main() {
-	time.Sleep(20 * time.Second)
+	// time.Sleep(19 * time.Second)
 
 	var err error
 
-	conn, _, err = zk.Connect([]string{"zookeeper"}, time.Second)
+	conn, _, err = zk.Connect([]string{"zookeeper"}, 5*time.Second)
 	if err != nil {
 		panic(err)
 	}

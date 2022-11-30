@@ -21,10 +21,11 @@ type OpPage struct {
 }
 
 func main() {
-	time.Sleep(20 * time.Second)
+	// time.Sleep(20 * time.Second)
+
 	fmt.Println(os.Getenv("NAME"), "container started!")
 
-	conn, _, err := zk.Connect([]string{"zookeeper"}, time.Second)
+	conn, _, err := zk.Connect([]string{"zookeeper"}, 5*time.Second)
 	if err != nil {
 		panic(err)
 	}
@@ -57,15 +58,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		var unencodedRows RowsType
-		json.Unmarshal(unencodedJSON, &unencodedRows)
+		err = json.Unmarshal(unencodedJSON, &unencodedRows)
+
+		if err != nil {
+			http.Error(w, "400", http.StatusBadRequest)
+			return
+		}
 
 		encodedRows := unencodedRows.encode()
 
-		encodedJSON, _ := json.Marshal(encodedRows)
+		encodedJSON, err := json.Marshal(encodedRows)
+
+		if err != nil {
+			http.Error(w, "400", http.StatusBadRequest)
+			return
+		}
 
 		if len(unencodedRows.Row) == 0 {
 			http.Error(w, "400", http.StatusBadRequest)
-			log.Fatalln(err)
+			return
 		}
 
 		println("unencoded:", string(unencodedJSON))
@@ -79,7 +90,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 		req.Header.Set("Content-Type", "application/json")
@@ -89,7 +100,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		if resp.StatusCode != 200 {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 	case "GET":
@@ -101,7 +112,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 		req.Header.Set("Accept", "text/plain")
@@ -116,7 +127,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		req, err = http.NewRequest(http.MethodGet, scanner.String(), nil)
 		if err != nil {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 		req.Header.Set("Accept", "application/json")
@@ -124,13 +135,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		resp, err = client.Do(req)
 		if err != nil {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 		responseBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
-			log.Fatalln(err)
+			return
 		}
 
 		var encodedRows EncRowsType
