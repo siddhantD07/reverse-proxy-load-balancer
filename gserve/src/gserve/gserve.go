@@ -21,6 +21,7 @@ type OpPage struct {
 }
 
 func main() {
+	time.Sleep(20 * time.Second)
 	fmt.Println(os.Getenv("NAME"), "container started!")
 
 	conn, _, err := zk.Connect([]string{"zookeeper"}, time.Second)
