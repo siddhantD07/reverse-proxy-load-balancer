@@ -11,9 +11,6 @@ import (
 )
 
 func main() {
-
-	time.Sleep(20 * time.Second)
-
 	var err error
 
 	conn, _, err = zk.Connect([]string{"zookeeper"}, time.Second)

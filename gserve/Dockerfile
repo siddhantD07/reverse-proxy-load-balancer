@@ -15,6 +15,7 @@ RUN CGO_ENABLED=0 go build -o /go/bin
 FROM scratch
 
 COPY --from=builder /go/bin/ .
+COPY ./src/gserve/template.html .
 
 EXPOSE 80
 

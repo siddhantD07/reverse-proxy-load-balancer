@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,9 +14,12 @@ import (
 	"github.com/samuel/go-zookeeper/zk"
 )
 
-func main() {
-	time.Sleep(20 * time.Second)
+type OpPage struct {
+	Title string
+	News  string
+}
 
+func main() {
 	fmt.Println(os.Getenv("NAME"), "container started!")
 
 	conn, _, err := zk.Connect([]string{"zookeeper"}, time.Second)
@@ -56,6 +60,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		encodedRows := unencodedRows.encode()
 
 		encodedJSON, _ := json.Marshal(encodedRows)
+
+		if len(unencodedRows.Row) == 0 {
+			http.Error(w, "400", http.StatusBadRequest)
+			log.Fatalln(err)
+		}
 
 		println("unencoded:", string(unencodedJSON))
 		println("encoded:", string(encodedJSON))
@@ -132,6 +141,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println(decodedRows)
+
+		t, err := template.ParseFiles("template.html")
+		if err != nil {
+			fmt.Println(err)
+		}
+		t.Execute(w, decodedRows)
 
 	}
 }
