@@ -4,11 +4,30 @@
         {{range .Row }}
         <h2>{{.Key}}</h2>  
         {{range .Cell}}
+        {{if isDocument .Column}}
         <h3>Document</h3>
-        <h2>{{.Column}}</h2>
-        <h2>{{.Value}}</h2>
+        <div>
+            <div style="width: 30%; float:left">
+                <p>{{ getCleanValue .Column}}</p>
+            </div>
+            <div style="width: 70%; float:right"> 
+                <p>{{ getCleanValue .Value}}</p>
+            </div>
+        </div>
+        {{end}}
+        {{if isMetadata .Column}}
+        <h3>Metadata</h3>
+        <div>
+            <div style="width: 30%; float:left">
+                <p>{{ getCleanValue .Column}}</p>
+            </div>
+            <div style="width: 70%; float:right">
+                <p>{{ getCleanValue .Value}}</p>
+            </div>
+        </div>
         {{end}}
         {{end}}
-        <p>Proudly served by gserve1</p>
+        {{end}}
+        <p>Proudly served by {{getServerName}}</p>
 
 </body>

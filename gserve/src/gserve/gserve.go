@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/samuel/go-zookeeper/zk"
@@ -31,7 +32,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println(os.Getenv("name"), "node created")
+		fmt.Println(os.Getenv("NAME"), "node created")
 	}
 
 	http.HandleFunc("/", handler)
@@ -142,11 +143,42 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(decodedRows)
 
-		t, err := template.ParseFiles("template.html")
+		t, err := template.New("template.html").Funcs(template.FuncMap{
+			"isDocument":    isDocument,
+			"isMetadata":    isMetadata,
+			"getCleanValue": getCleanValue,
+			"getServerName": getServerName,
+		}).ParseFiles("template.html")
 		if err != nil {
 			fmt.Println(err)
 		}
 		t.Execute(w, decodedRows)
 
 	}
+}
+
+func isDocument(value string) bool {
+	if strings.HasPrefix(value, "document:") {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isMetadata(value string) bool {
+	if strings.HasPrefix(value, "metadata:") {
+		return true
+	} else {
+		return false
+	}
+}
+
+func getCleanValue(value string) string {
+	index := strings.Index(value, ":")
+	cleanVal := value[(index + 1):]
+	return cleanVal
+}
+
+func getServerName() string {
+	return os.Getenv("NAME")
 }
