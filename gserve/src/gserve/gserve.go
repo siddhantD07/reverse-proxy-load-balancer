@@ -21,7 +21,7 @@ type OpPage struct {
 }
 
 func main() {
-	time.Sleep(15 * time.Second)
+	// time.Sleep(15 * time.Second)
 
 	fmt.Println(os.Getenv("NAME"), "container started!")
 
@@ -61,7 +61,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(unencodedJSON, &unencodedRows)
 
 		if err != nil {
-			http.Error(w, "400", http.StatusBadRequest)
+			http.Error(w, "some error", http.StatusOK)
 			return
 		}
 
@@ -70,12 +70,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		encodedJSON, err := json.Marshal(encodedRows)
 
 		if err != nil {
-			http.Error(w, "400", http.StatusBadRequest)
+			http.Error(w, "Some error", http.StatusOK)
 			return
 		}
 
 		if len(unencodedRows.Row) == 0 {
-			http.Error(w, "200", http.StatusOK)
+			http.Error(w, "Empty Rows!!", http.StatusOK)
 			return
 		}
 
@@ -99,10 +99,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(resp.StatusCode)
 
 		if resp.StatusCode != 200 {
-			http.Error(w, "Unsucessful", http.StatusOK)
+			http.Error(w, "200", http.StatusOK)
 			return
 		}
-
 	case "GET":
 		fmt.Println("Get request received")
 
