@@ -27,6 +27,7 @@ mkdir -pv /hbase/logs
 #RUN sed -i 's/# export HBASE_MANAGES_ZK=true/export HBASE_MANAGES_ZK=true/' /hbase/conf/hbase-env.sh
 /hbase/bin/hbase zookeeper &>/hbase/logs/zookeeper.log &
 /hbase/bin/start-hbase.sh
+sleep 10
 /hbase/bin/hbase-daemon.sh start rest -p 8080
 /hbase/bin/hbase-daemon.sh start thrift
 #/hbase/bin/hbase-daemon.sh start thrift2
