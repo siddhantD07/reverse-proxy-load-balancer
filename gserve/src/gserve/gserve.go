@@ -61,7 +61,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(unencodedJSON, &unencodedRows)
 
 		if err != nil {
-			http.Error(w, "200", http.StatusOK)
+			http.Error(w, "400", http.StatusBadRequest)
 			return
 		}
 
@@ -89,7 +89,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		req, err := http.NewRequest(http.MethodPut, "http://hbase:8080/se2:library/"+key, bytes.NewBuffer(encodedJSON))
 
 		if err != nil {
-			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
+			http.Error(w, "400", http.StatusBadRequest)
 			return
 		}
 
@@ -99,7 +99,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(resp.StatusCode)
 
 		if resp.StatusCode != 200 {
-			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
+			http.Error(w, "400", http.StatusBadRequest)
 			return
 		}
 
