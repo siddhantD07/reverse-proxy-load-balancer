@@ -74,7 +74,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if len(unencodedRows.Row) == 0 {
+		if unencodedRows.Row == nil {
 			http.Error(w, "400", http.StatusBadRequest)
 			return
 		}
