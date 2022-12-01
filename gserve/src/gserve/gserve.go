@@ -61,7 +61,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(unencodedJSON, &unencodedRows)
 
 		if err != nil {
-			http.Error(w, "400", http.StatusBadRequest)
+			http.Error(w, "200", http.StatusOK)
 			return
 		}
 
