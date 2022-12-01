@@ -15,27 +15,27 @@ import (
 	"github.com/samuel/go-zookeeper/zk"
 )
 
-type OpPage struct {
-	Title string
-	News  string
-}
-
 func main() {
 	time.Sleep(15 * time.Second)
 
 	fmt.Println(os.Getenv("NAME"), "container started!")
 
+	//connect to zookeeper
 	conn, _, err := zk.Connect([]string{"zookeeper"}, 5*time.Second)
 	if err != nil {
 		panic(err)
 	}
+
+	//create servers path/node
 	_, err = conn.Create("/servers", []byte{}, 0, zk.WorldACL(zk.PermAll))
+
+	//create node for gserve
 	_, err = conn.Create("/servers/"+os.Getenv("NAME"), nil, zk.FlagEphemeral, zk.WorldACL(zk.PermAll))
 	if err != nil {
 		panic(err)
-	} else {
-		fmt.Println(os.Getenv("NAME"), "node created")
 	}
+
+	fmt.Println(os.Getenv("NAME"), "node created")
 
 	http.HandleFunc("/", handler)
 
@@ -78,9 +78,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "400", http.StatusBadRequest)
 			return
 		}
-
-		println("unencoded:", string(unencodedJSON))
-		println("encoded:", string(encodedJSON))
 
 		client := &http.Client{}
 
@@ -126,7 +123,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		req, err = http.NewRequest(http.MethodGet, scanner.String(), nil)
 		if err != nil {
-			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
+			http.Error(w, "500", http.StatusInternalServerError)
 			return
 		}
 
@@ -134,13 +131,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		resp, err = client.Do(req)
 		if err != nil {
-			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
+			http.Error(w, "500", http.StatusInternalServerError)
 			return
 		}
 
 		responseBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			http.Error(w, "500 something went wrong", http.StatusInternalServerError)
+			http.Error(w, "500", http.StatusInternalServerError)
 			return
 		}
 
@@ -155,7 +152,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(decodedRows)
 
-		t, err := template.New("template.html").Funcs(template.FuncMap{
+		tpl, err := template.New("template.html").Funcs(template.FuncMap{
 			"isDocument":    isDocument,
 			"isMetadata":    isMetadata,
 			"getCleanValue": getCleanValue,
@@ -164,7 +161,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		t.Execute(w, decodedRows)
+		tpl.Execute(w, decodedRows)
 
 	}
 }
